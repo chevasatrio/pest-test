@@ -1,0 +1,43 @@
+1. Persiapan aplikasi 
+       ↓
+2. Install PEST
+       ↓
+3. Konfigurasi
+       ↓
+4. Setup helper
+       ↓
+5. Tulis & jalankan test
+       ↓
+6. Uninstall & bersihkan (untuk praktek ulang)
+
+TAHAP 1 : PERSIAPAN APLIKASI Done 
+TAHAP 2 : INSTALL PEST Done
+TAHAP 3 : KONFIGURASI Done
+TAHAP 4 : SETUP HELPER DI PEST.PHP Done
+TAHAP 5 : TULIS DAN JALANKAN TEST 
+
+tests/
+├── Unit/
+│   └── UserModelTest.php       — test logic model
+├── Feature/
+│   ├── AuthTest.php            — test login & logout
+│   ├── ManagerKaryawanTest.php — test CRUD oleh manager
+│   └── KaryawanAksesTest.php  — test pembatasan akses karyawan
+└── Pest.php                    — helper functions\
+
+
+
+AAA Patern (Arrange, Act, Assert) 
+
+test('deskripsi test yang diuji', function(){
+
+    //Arrange - siapkan kondisi awal
+    $user = action();
+
+    //Act - Lakukan aksi yang ingin diuji
+    $response = $this->actingAs($user)->get('/view')
+
+    //Assert - verifikasi hasilnya apakah sesuai dengan ekspektasi
+    $response->assertStatus(200);
+
+});
