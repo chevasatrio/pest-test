@@ -1,31 +1,13 @@
 # Dari Teori ke Tools: White Box, Black Box, PEST, dan Selenium
 **Pengujian dan Implementasi Sistem | BBK2MAB2**
 
----
 
-## Kesimpulan Besar Hari Ini
-
-Selama beberapa pertemuan terakhir kalian sudah belajar banyak hal — mulai dari konsep pengujian, teknik Black Box, White Box, hingga tools PEST dan Selenium. Hari ini kita rangkum semuanya dalam satu peta besar yang jelas.
-
-```
 Teori manual dulu → baru implementasi di tools
 
 Basis Path (hitung V(G))  →  PEST Unit Test
 EP + State Transition      →  PEST Feature Test
 State Transition (UI)      →  Selenium
-```
 
----
-
-## Peta Lengkap: Tools, Jenis Testing, dan Teknik Manual
-
-| Tools | Jenis Testing | Teknik Manual yang Dipakai | Layer |
-|---|---|---|---|
-| PEST Unit Test | White Box | Basis Path Testing — hitung V(G) | Logika / Kode |
-| PEST Feature Test | Black Box | EP + State Transition (HTTP) | Aplikasi / HTTP |
-| Selenium | Black Box murni | State Transition (UI) | Browser / UI |
-
----
 
 ## Kenapa Pembagian Ini Penting?
 
@@ -284,25 +266,6 @@ test('isManager mengembalikan false jika role adalah karyawan', function () {
 
 });
 
-// ─────────────────────────────────────────────────────────────
-// Path 3: boundary case — role kosong → harus return false
-// ─────────────────────────────────────────────────────────────
-test('isManager mengembalikan false jika role kosong', function () {
-
-    // Arrange
-    $user = new User(['role' => '']);
-
-    // Act
-    $hasil = $user->isManager();
-
-    // Assert
-    expect($hasil)->toBeFalse();
-
-});
-```
-
----
-
 ### Step 6 — Jalankan Test
 
 ```bash
@@ -313,11 +276,11 @@ Output yang diharapkan:
 
 ```
    PASS  Tests\Unit\UserModelTest
-  - isManager mengembalikan true jika role adalah manager
-  - isManager mengembalikan false jika role adalah karyawan
+  - Bryan mengembalikan true jika role adalah manager
+  - Bryan mengembalikan false jika role adalah karyawan
 
-  Tests:  2 passed (2 assertions)
-  Duration: 0.08s
+  Tests:    2 passed (2 assertions)
+  Duration: 0.11s
 ```
 
 ---
@@ -325,11 +288,10 @@ Output yang diharapkan:
 ### Ringkasan Studi Kasus
 
 ```
-isManager() → 1 IF → V(G) = 2 → + 1 boundary → 3 test case
+isManager() → 1 IF → V(G) = 2 → + 1 boundary → 2 test case
 
 Path 1 : role = 'manager'   → true   
-Path 2 : role = 'karyawan'  → false  
-Path 3 : role = ''          → false   (boundary case)
+Path 2 : role = 'karyawan'  → false 
 ```
 
 ---
@@ -349,12 +311,12 @@ public function isKaryawan(): bool
 ```
 
 Kerjakan:
-1. Gambar flow graph-nya
+1. Gambar flow graph-nya 
 2. Hitung V(G) dengan 3 formula
 3. Tentukan semua independent path
 4. Tulis test case lengkap di PEST
 
-Deadline : Rabu, 13 Mei 2026 : 08.00 
+Deadline : Kamis, 14 Mei 2026 : 07.00 WIB 
 
 ---
 
@@ -367,4 +329,3 @@ Seorang tester yang baik tidak hanya tahu cara menulis `expect()->toBeTrue()` �
 ---
 
 *Pengujian dan Implementasi Sistem | BBK2MAB2 | Telkom University Surabaya*
-

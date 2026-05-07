@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Hash;
 // ─────────────────────────────────────────────────────────────
 // Path 1: role = 'manager' → harus return true
 // ─────────────────────────────────────────────────────────────
-test('Vincent Seorang manager', function () {
+test('Bryan Seorang manager', function () {
 
     // Arrange — buat object User dengan role manager
     $user = new User(['role' => 'manager']);
@@ -22,7 +22,7 @@ test('Vincent Seorang manager', function () {
 // ─────────────────────────────────────────────────────────────
 // Path 2: role = 'karyawan' → harus return false
 // ─────────────────────────────────────────────────────────────
-test('Vincent Bukan Manager', function () {
+test('Bryan Bukan Manager', function () {
 
     // Arrange
     $user = new User(['role' => 'karyawan']);
