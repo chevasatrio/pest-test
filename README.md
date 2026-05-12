@@ -296,11 +296,15 @@ Path 2 : role = 'karyawan'  → false
 
 ---
 
-## Latihan Mandiri
+## Latihan Mandiri — Pengerjaan Method `isKaryawan()` ✅
 
-Terapkan alur yang sama untuk method `isKaryawan()`:
+Menerapkan alur yang sama (Basis Path Testing) untuk method `isKaryawan()`.
+
+### Kode yang Diuji
 
 ```php
+// app/Models/User.php
+
 public function isKaryawan(): bool
 {
     if ($this->role === 'karyawan') {
@@ -310,13 +314,185 @@ public function isKaryawan(): bool
 }
 ```
 
-Kerjakan:
-1. Gambar flow graph-nya 
-2. Hitung V(G) dengan 3 formula
-3. Tentukan semua independent path
-4. Tulis test case lengkap di PEST
+### 1. Identifikasi Struktur Kode
 
-Deadline : Kamis, 14 Mei 2026 : 07.00 WIB 
+- Ada **1 buah IF** → berarti ada **1 Predicate Node**
+- Tidak ada `else`, `while`, atau `for`
+
+### 2. Flow Graph
+
+```
+         [N1] Start
+           |
+           | e1
+           ▼
+   [N2] role === 'karyawan'?   ← Predicate Node
+        /           \
+    e2 /             \ e3
+  TRUE               FALSE
+      |               |
+      ▼               ▼
+   [N3]             [N4]
+ return true      return false
+      |               |
+   e4 |            e5 |
+      ▼               ▼
+         [N5] End
+```
+
+**Hasil identifikasi:**
+
+| Elemen | Jumlah | Detail |
+|---|---|---|
+| Node (N) | 5 | N1 Start, N2 Predicate, N3 return true, N4 return false, N5 End |
+| Edge (E) | 5 | e1 (N1→N2), e2 (N2→N3), e3 (N2→N4), e4 (N3→N5), e5 (N4→N5) |
+| Predicate Node (P kondisi) | 1 | N2 saja |
+| Komponen terhubung (P formula) | 1 | satu program |
+
+### 3. Hitung V(G) dengan 3 Formula
+
+**Formula 1 — E - N + 2P:**
+```
+V(G) = E - N + 2P
+V(G) = 5 - 5 + 2(1)
+V(G) = 0 + 2
+V(G) = 2
+```
+
+**Formula 2 — Predicate Node + 1:**
+```
+V(G) = P + 1
+V(G) = 1 + 1
+V(G) = 2
+```
+
+**Formula 3 — Region + 1:**
+```
+Region tertutup di flow graph = 1
+V(G) = R + 1
+V(G) = 1 + 1
+V(G) = 2
+```
+
+**Kesimpulan:** Ketiga formula menghasilkan **V(G) = 2** → konsisten dan valid. Ditambah 1 boundary case, total test case = **3**.
+
+### 4. Independent Paths
+
+**Path 1 — Happy Path (role = 'karyawan'):**
+```
+N1 → N2(TRUE) → N3 → N5
+Kondisi : role === 'karyawan'
+Output  : return true
+```
+
+**Path 2 — Negative Path (role = 'manager'):**
+```
+N1 → N2(FALSE) → N4 → N5
+Kondisi : role === 'manager'
+Output  : return false
+```
+
+**Path 3 — Boundary Case (role kosong):**
+```
+N1 → N2(FALSE) → N4 → N5
+Kondisi : role === '' (string kosong)
+Output  : return false
+```
+
+| Path | Rute | Input (`role`) | Expected Output | Jenis |
+|---|---|---|---|---|
+| 1 | N1→N2(T)→N3→N5 | `'karyawan'` | `true` | Happy path |
+| 2 | N1→N2(F)→N4→N5 | `'manager'` | `false` | Negative path |
+| 3 | N1→N2(F)→N4→N5 | `''` (kosong) | `false` | Boundary case |
+
+### 5. Test Case Lengkap di PEST
+
+File: `tests/Unit/IsKaryawanTest.php`
+
+```php
+<?php
+
+use App\Models\User;
+
+// ─────────────────────────────────────────────────────────────
+// Path 1: role = 'karyawan' → harus return true
+// Rute: N1 → N2(TRUE) → N3 → N5
+// ─────────────────────────────────────────────────────────────
+test('isKaryawan mengembalikan true jika role adalah karyawan', function () {
+
+    // Arrange — buat object User dengan role karyawan
+    $user = new User(['role' => 'karyawan']);
+
+    // Act — panggil method yang diuji
+    $hasil = $user->isKaryawan();
+
+    // Assert — verifikasi hasilnya
+    expect($hasil)->toBeTrue();
+
+});
+
+// ─────────────────────────────────────────────────────────────
+// Path 2: role = 'manager' → harus return false
+// Rute: N1 → N2(FALSE) → N4 → N5
+// ─────────────────────────────────────────────────────────────
+test('isKaryawan mengembalikan false jika role adalah manager', function () {
+
+    // Arrange
+    $user = new User(['role' => 'manager']);
+
+    // Act
+    $hasil = $user->isKaryawan();
+
+    // Assert
+    expect($hasil)->toBeFalse();
+
+});
+
+// ─────────────────────────────────────────────────────────────
+// Path 3: role = '' (kosong) → harus return false (boundary)
+// Rute: N1 → N2(FALSE) → N4 → N5
+// ─────────────────────────────────────────────────────────────
+test('isKaryawan mengembalikan false jika role kosong', function () {
+
+    // Arrange — boundary case: role string kosong
+    $user = new User(['role' => '']);
+
+    // Act
+    $hasil = $user->isKaryawan();
+
+    // Assert
+    expect($hasil)->toBeFalse();
+
+});
+```
+
+### 6. Jalankan Test
+
+```bash
+./vendor/bin/pest tests/Unit/IsKaryawanTest.php
+```
+
+### Hasil Eksekusi:
+
+```
+   PASS  Tests\Unit\IsKaryawanTest
+  ✓ isKaryawan mengembalikan true jika role adalah karyawan        0.06s
+  ✓ isKaryawan mengembalikan false jika role adalah manager
+  ✓ isKaryawan mengembalikan false jika role kosong
+
+  Tests:    3 passed (3 assertions)
+  Duration: 0.80s
+```
+
+### Ringkasan Latihan Mandiri
+
+```
+isKaryawan() → 1 IF → V(G) = 2 → + 1 boundary → 3 test case
+
+Path 1 : role = 'karyawan'  → true    ✅ Happy path
+Path 2 : role = 'manager'   → false   ✅ Negative path
+Path 3 : role = ''          → false   ✅ Boundary case
+```
 
 ---
 
